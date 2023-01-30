@@ -1,39 +1,59 @@
 import React, { useState } from "react";
+import { getRandomId } from "./helper";
 
 export const MyForm = (props) => {
-  const [name, setName] = useState("");
-  const [age, setAge] = useState(0);
-  const [city, setCity] = useState("");
-
-  const [list, setList] = useState([]);
+  const [formValues, setFormValues] = useState({
+    name: '',
+    age: 0,
+    city: '',
+    list: []
+  });
 
   const handleReset = () => {
-    setAge(0);
-    setName("");
-    setCity("");
+    const newValues = { ...formValues, name: '', age: 0, city: '' };
+    setFormValues(newValues)
   };
 
   const handleFormSubmit = (e) => {
     e.preventDefault();
-    const newList = [...list];
+    const newValues = { ...formValues, list: [...formValues.list], name: '', age: 0, city: '' };
     /* whenever u are updating the state and value is of non primitve,
       you have to give new reference in set state function
     */
-    newList.push({ name, age, city });
-    setList(newList);
-    handleReset();
+    newValues.list.push({ name, age, city, id: getRandomId() });
+    setFormValues(newValues)
   };
 
   const handleNameChange = (e) => {
-    setName(e.target.value);
+    /* second form of setState hook */
+    setFormValues((oldValues => {
+        return {
+            ...oldValues,
+            name: e.target.value,
+        }
+    }));
   };
 
   const handleCityChange = (e) => {
-    setCity(e.target.value);
+        /* second form of setState hook */
+        setFormValues((oldValues => {
+            return {
+                ...oldValues,
+                city: e.target.value,
+            }
+        }));
   };
   const handleAgeChange = (e) => {
-    setAge(e.target.value);
+        /* second form of setState hook */
+        setFormValues((oldValues => {
+            return {
+                ...oldValues,
+                age: e.target.value,
+            }
+        }));
   };
+
+  const { name, age, city, list } = formValues;
 
   return (
     <div>
@@ -92,7 +112,7 @@ export const MyForm = (props) => {
         <tbody>
           {list.map((item) => {
             return (
-              <tr>
+              <tr key={item.id}>
                 <td>{item.name}</td>
                 <td>{item.age}</td>
                 <td>{item.city}</td>
@@ -111,3 +131,4 @@ export const MyForm = (props) => {
 };
 
 MyForm.propTypes = {};
+
