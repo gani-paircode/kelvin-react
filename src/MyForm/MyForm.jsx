@@ -18,7 +18,7 @@ export const MyForm = (props) => {
     e.preventDefault();
     const newValues = { ...formValues, list: [...formValues.list], name: '', age: 0, city: '' };
     /* whenever u are updating the state and value is of non primitve,
-      you have to give new reference in set state function
+      you have to give new reference in set state function...
     */
     newValues.list.push({ name, age, city, id: getRandomId() });
     setFormValues(newValues)
