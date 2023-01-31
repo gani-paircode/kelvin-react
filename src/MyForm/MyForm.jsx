@@ -1,60 +1,61 @@
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import { getRandomId } from "./helper";
 
-export const MyForm = (props) => {
-  const [formValues, setFormValues] = useState({
-    name: '',
-    age: 0,
-    city: '',
-    list: []
-  });
+const InitialState = Object.freeze({
+  name: '',
+  age: 0,
+  city: '',
+  list: []
+});
 
-  const handleReset = () => {
+export const MyForm = (props) => {
+  const [formValues, setFormValues] = useState(InitialState);
+
+  const handleReset = useCallback(() => {
     const newValues = { ...formValues, name: '', age: 0, city: '' };
     setFormValues(newValues)
-  };
+  }, [formValues, setFormValues]);
 
-  const handleFormSubmit = (e) => {
+  const handleFormSubmit = useCallback((e) => {
     e.preventDefault();
-    const newValues = { ...formValues, list: [...formValues.list], name: '', age: 0, city: '' };
-    /* whenever u are updating the state and value is of non primitve,
-      you have to give new reference in set state function
-    */
-    newValues.list.push({ name, age, city, id: getRandomId() });
-    setFormValues(newValues)
-  };
+    setFormValues((obj) => {
+      const newRecord = { name: obj.name, age: obj.age, city: obj.city, id: getRandomId() };
+      return {
+        ...obj,
+        name: '', age: 0, city: '',
+        list: [...obj.list, newRecord],
+      };
+    });   
+  }, [setFormValues])
 
-  const handleNameChange = (e) => {
-    /* second form of setState hook */
+  const handleNameChange = useCallback((e) => {
     setFormValues((oldValues => {
-        return {
-            ...oldValues,
-            name: e.target.value,
-        }
+      return {
+        ...oldValues,
+        name: e.target.value,
+      }
     }));
-  };
+  }, [setFormValues]);
 
-  const handleCityChange = (e) => {
-        /* second form of setState hook */
-        setFormValues((oldValues => {
-            return {
-                ...oldValues,
-                city: e.target.value,
-            }
-        }));
-  };
-  const handleAgeChange = (e) => {
-        /* second form of setState hook */
-        setFormValues((oldValues => {
-            return {
-                ...oldValues,
-                age: e.target.value,
-            }
-        }));
-  };
+  const handleCityChange = useCallback((e) => {
+    setFormValues((oldValues => {
+      return {
+        ...oldValues,
+        city: e.target.value,
+      }
+    }));
+  }, [setFormValues]);
 
-  const { name, age, city, list } = formValues;
+  const handleAgeChange = useCallback((e) => {
+    setFormValues((oldValues => {
+      return {
+        ...oldValues,
+        age: e.target.value,
+      }
+    }));
+  }, [setFormValues]);
 
+  const { list } = formValues;
   return (
     <div>
       <form>
@@ -63,7 +64,7 @@ export const MyForm = (props) => {
             Enter your name
             <input
               onChange={handleNameChange}
-              value={name}
+              value={formValues.name}
               type="text"
               id="txtName"
             />
@@ -74,7 +75,7 @@ export const MyForm = (props) => {
             Enter your age
             <input
               onChange={handleAgeChange}
-              value={age}
+              value={formValues.age}
               type="number"
               id="number"
               max="100"
@@ -86,7 +87,7 @@ export const MyForm = (props) => {
             Enter your city
             <input
               onChange={handleCityChange}
-              value={city}
+              value={formValues.city}
               type="text"
               id="city"
             />
