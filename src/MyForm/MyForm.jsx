@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useMemo } from "react";
 import { getCityWiseCount, getRandomId } from "./helper";
 
 const InitialState = Object.freeze({
@@ -56,7 +56,10 @@ export const MyForm = (props) => {
   }, [setFormValues]);
 
   const { list } = formValues;
-  const cityWiseCounts = getCityWiseCount(list);
+  const cityWiseCounts = useMemo(() => {
+    return getCityWiseCount(list);
+  }, [list]);
+
   return (
     <div>
       <form>
