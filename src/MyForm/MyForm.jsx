@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from "react";
-import { getRandomId } from "./helper";
+import { getCityWiseCount, getRandomId } from "./helper";
 
 const InitialState = Object.freeze({
   name: '',
@@ -56,6 +56,7 @@ export const MyForm = (props) => {
   }, [setFormValues]);
 
   const { list } = formValues;
+  const cityWiseCounts = getCityWiseCount(list);
   return (
     <div>
       <form>
@@ -121,6 +122,31 @@ export const MyForm = (props) => {
             );
           })}
           {list.length === 0 ? (
+            <tr>
+              <td colSpan="3">No data to display</td>
+            </tr>
+          ) : null}
+        </tbody>
+      </table>
+      <br />
+      <h3>City wise employee count</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>City</th>
+            <th>Count</th>
+          </tr>
+        </thead>
+        <tbody>
+          {cityWiseCounts.map((item) => {
+            return (
+              <tr key={item.city}>
+                <td>{item.city}</td>
+                <td>{item.count}</td>
+              </tr>
+            );
+          })}
+          {cityWiseCounts.length === 0 ? (
             <tr>
               <td colSpan="3">No data to display</td>
             </tr>
