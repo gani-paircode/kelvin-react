@@ -1,14 +1,14 @@
-import React, { Component } from 'react';
+import React from 'react';
+import { services } from './services';
 
+console.log('Serivices ', services);
 
-class App extends Component {
-  render() {
+const App = () => {
     return (
       <div className="App">
         This should be this much simple....
       </div>
     );
-  }
 }
 
 export default App;
